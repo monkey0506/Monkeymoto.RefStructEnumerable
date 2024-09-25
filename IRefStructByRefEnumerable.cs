@@ -1,7 +1,7 @@
 ﻿namespace Monkeymoto.RefStructEnumerable
 {
-    public interface IRefStructByRefEnumerable<TEnumerator, T> :
-        IRefStructEnumerable<TEnumerator, T>
-        where TEnumerator : struct, IRefStructByRefEnumerator<TEnumerator, T>, allows ref struct
+    public interface IRefStructByRefEnumerable<T, TEnumerator> :
+        IRefStructEnumerable<T, TEnumerator>
+        where TEnumerator : struct, IRefStructByRefEnumerator<T, TEnumerator>, allows ref struct
     { }
 }

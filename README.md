@@ -11,18 +11,17 @@ proof-of-concept.*
 ## How to use this project
 
 The extension methods provided by this project depend on the
-`IRefStructEnumerator<TEnumerator, T>` interface which it defines. This
+`IRefStructEnumerator<T, TEnumerator>` interface which it defines. This
 interface is implemented by a `ref struct` enumerator for your user-defined
 types.
 
-You may choose to use the `IRefStructByRefEnumerator<TEnumerator, T>` which
+You may choose to use the `IRefStructByRefEnumerator<T, TEnumerator>` which
 will enable enumerating your values with by-`ref` parameters (allowing
 in-place mutation during enumeration). This interface is derived from
-`IRefStructEnumerator<TEnumerator, T>`.
+`IRefStructEnumerator<T, TEnumerator>`.
 
-Both interfaces take two generic type parameters. `TEnumerator` is the
-enumerator type itself. `T` is the element type of values which will be
-enumerated.
+Both interfaces take two generic type parameters. `T` is the element type of
+values which will be enumerated. `TEnumerator` is the enumerator type itself.
 
 For example, you might have an inline array such as:
 
@@ -32,7 +31,7 @@ public struct Buffer8<T>
 {
     private T element0;
 
-    public ref struct Enumerator(ref Buffer8<T> buffer) : IRefStructByRefEnumerator<Enumerator, T>
+    public ref struct Enumerator(ref Buffer8<T> buffer) : IRefStructByRefEnumerator<T, Enumerator>
     {
         private Span<T>.Enumerator enumerator = GetSpanEnumerator(ref buffer);
 
@@ -46,7 +45,7 @@ public struct Buffer8<T>
             get => ref enumerator.Current;
         }
 
-        T IRefStructEnumerator<Enumerator, T>.Current
+        T IRefStructEnumerator<T, Enumerator>.Current
         {
             get => Current;
         }
@@ -61,12 +60,12 @@ public struct Buffer8<T>
 ````
 
 The `Enumerator.GetEnumerator()` method is **required** by
-`IRefStructEnumerator<TEnumerator, T>` to enable `foreach` enumeration of the
+`IRefStructEnumerator<T, TEnumerator>` to enable `foreach` enumeration of the
 types introduced by this project (most of which are designed to be used
 transparently).
 
 The following extension methods are currently available for enumerators which
-implement `IRefStructEnumerator<TEnumerator, T>`:
+implement `IRefStructEnumerator<T, TEnumerator>`:
 
 - `Any(T? _)`
 - `Any(Func<T, bool> predicate, T? _)`
@@ -87,7 +86,7 @@ deduction. The argument is not used by the method, and you may pass in any
 appropriately typed value (recommended use is: `default(T)`).
 
 The `SkipByRef` and `TakeByRef` methods preserve the
-`IRefStructByRefEnumerator<TEnumerator, T>` interface for chained calls. The
+`IRefStructByRefEnumerator<T, TEnumerator>` interface for chained calls. The
 `Skip` and `Take` methods drop the `-ByRef-` interface.
 
 The `Select` and `Where` methods have overloads that take a custom delegate
@@ -95,7 +94,7 @@ that exposes the `.Current` element by `ref`. For `Where`, the predicate
 argument is `ref readonly`. The `Select` method's selector takes its argument
 by mutable `ref`, allowing you to mutate the current value while selecting a
 new value. These by-`ref` overloads can only be chained with methods that
-preserve the `IRefStructByRefEnumerator<TEnumerator, T>` interface. For
+preserve the `IRefStructByRefEnumerator<T, TEnumerator>` interface. For
 example, you cannot chain the by-`ref` `Select` after a call to `Take`, but you
 can chain it after a call to `TakeByRef`.
 

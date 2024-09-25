@@ -3,13 +3,13 @@ using static Monkeymoto.RefStructEnumerable.RefStructEnumerable;
 
 namespace Monkeymoto.RefStructEnumerable
 {
-    public ref struct RefStructSelectByRefEnumerator<TEnumerator, TSource, TResult>
+    public ref struct RefStructSelectByRefEnumerator<TSource, TResult, TEnumerator>
     (
         TEnumerator enumerator,
         SelectByRefSelector<TSource, TResult> selector
     ) :
-        IRefStructByRefEnumerator<RefStructSelectByRefEnumerator<TEnumerator, TSource, TResult>, TResult>
-        where TEnumerator : struct, IRefStructByRefEnumerator<TEnumerator, TSource>, allows ref struct
+        IRefStructByRefEnumerator<TResult, RefStructSelectByRefEnumerator<TSource, TResult, TEnumerator>>
+        where TEnumerator : struct, IRefStructByRefEnumerator<TSource, TEnumerator>, allows ref struct
     {
         private TEnumerator enumerator = enumerator;
         private readonly SelectByRefSelector<TSource, TResult> selector = selector;
@@ -21,14 +21,14 @@ namespace Monkeymoto.RefStructEnumerable
             get => ref current;
         }
 
-        TResult IRefStructEnumerator<RefStructSelectByRefEnumerator<TEnumerator, TSource, TResult>, TResult>.Current
+        TResult IRefStructEnumerator<TResult, RefStructSelectByRefEnumerator<TSource, TResult, TEnumerator>>.Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => Current;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public RefStructSelectByRefEnumerator<TEnumerator, TSource, TResult> GetEnumerator() => this;
+        public RefStructSelectByRefEnumerator<TSource, TResult, TEnumerator> GetEnumerator() => this;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext()

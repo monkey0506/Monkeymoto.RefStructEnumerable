@@ -2,13 +2,13 @@
 
 namespace Monkeymoto.RefStructEnumerable
 {
-    public ref struct RefStructSkipByRefEnumerator<TEnumerator, T>
+    public ref struct RefStructSkipByRefEnumerator<T, TEnumerator>
     (
         TEnumerator enumerator,
         int count
     ) :
-        IRefStructByRefEnumerator<RefStructSkipByRefEnumerator<TEnumerator, T>, T>
-        where TEnumerator : struct, IRefStructByRefEnumerator<TEnumerator, T>, allows ref struct
+        IRefStructByRefEnumerator<T, RefStructSkipByRefEnumerator<T, TEnumerator>>
+        where TEnumerator : struct, IRefStructByRefEnumerator<T, TEnumerator>, allows ref struct
     {
         private TEnumerator enumerator = enumerator;
         private int count = count;
@@ -19,14 +19,14 @@ namespace Monkeymoto.RefStructEnumerable
             get => ref enumerator.Current;
         }
 
-        T IRefStructEnumerator<RefStructSkipByRefEnumerator<TEnumerator, T>, T>.Current
+        T IRefStructEnumerator<T, RefStructSkipByRefEnumerator<T, TEnumerator>>.Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => Current;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public RefStructSkipByRefEnumerator<TEnumerator, T> GetEnumerator() => this;
+        public RefStructSkipByRefEnumerator<T, TEnumerator> GetEnumerator() => this;
 
         public bool MoveNext()
         {

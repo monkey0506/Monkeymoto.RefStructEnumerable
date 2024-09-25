@@ -9,14 +9,14 @@ namespace Monkeymoto.RefStructEnumerable
         public delegate bool WhereByRefPredicate<T>(ref readonly T arg);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Any<TEnumerator, T>(this TEnumerator enumerator, T? _ = default)
-            where TEnumerator : struct, IRefStructEnumerator<TEnumerator, T>, allows ref struct
+        public static bool Any<T, TEnumerator>(this TEnumerator enumerator, T? _ = default)
+            where TEnumerator : struct, IRefStructEnumerator<T, TEnumerator>, allows ref struct
         {
             return enumerator.MoveNext();
         }
 
-        public static bool Any<TEnumerator, T>(this TEnumerator enumerator, Func<T, bool> predicate, T? _ = default)
-            where TEnumerator : struct, IRefStructEnumerator<TEnumerator, T>, allows ref struct
+        public static bool Any<T, TEnumerator>(this TEnumerator enumerator, Func<T, bool> predicate, T? _ = default)
+            where TEnumerator : struct, IRefStructEnumerator<T, TEnumerator>, allows ref struct
         {
             for (bool moveNext = enumerator.MoveNext(); moveNext; moveNext = enumerator.MoveNext())
             {
@@ -29,102 +29,102 @@ namespace Monkeymoto.RefStructEnumerable
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool All<TEnumerator, T>(this TEnumerator enumerator, Func<T, bool> predicate, T? _ = default)
-            where TEnumerator : struct, IRefStructEnumerator<TEnumerator, T>, allows ref struct
+        public static bool All<T, TEnumerator>(this TEnumerator enumerator, Func<T, bool> predicate, T? _ = default)
+            where TEnumerator : struct, IRefStructEnumerator<T, TEnumerator>, allows ref struct
         {
-            return !enumerator.Any<TEnumerator, T>(x => !predicate(x));
+            return !enumerator.Any<T, TEnumerator>(x => !predicate(x));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RefStructSelectByRefEnumerator<TEnumerator, TSource, TResult>
-            Select<TEnumerator, TSource, TResult>
+        public static RefStructSelectByRefEnumerator<TSource, TResult, TEnumerator>
+            Select<TSource, TResult, TEnumerator>
         (
             this TEnumerator enumerator,
             SelectByRefSelector<TSource, TResult> selector
         )
-            where TEnumerator : struct, IRefStructByRefEnumerator<TEnumerator, TSource>, allows ref struct
+            where TEnumerator : struct, IRefStructByRefEnumerator<TSource, TEnumerator>, allows ref struct
         {
             return new(enumerator, selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RefStructSelectEnumerator<TEnumerator, TSource, TResult>
-            Select<TEnumerator, TSource, TResult>
+        public static RefStructSelectEnumerator<TSource, TResult, TEnumerator>
+            Select<TSource, TResult, TEnumerator>
         (
             this TEnumerator enumerator,
             Func<TSource, TResult> selector
         )
-            where TEnumerator : struct, IRefStructEnumerator<TEnumerator, TSource>, allows ref struct
+            where TEnumerator : struct, IRefStructEnumerator<TSource, TEnumerator>, allows ref struct
         {
             return new(enumerator, selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RefStructSkipEnumerator<TEnumerator, T> Skip<TEnumerator, T>
+        public static RefStructSkipEnumerator<T, TEnumerator> Skip<T, TEnumerator>
         (
             this TEnumerator enumerator,
             int count,
             T? _ = default
         )
-            where TEnumerator : struct, IRefStructEnumerator<TEnumerator, T>, allows ref struct
+            where TEnumerator : struct, IRefStructEnumerator<T, TEnumerator>, allows ref struct
         {
             return new(enumerator, count);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RefStructSkipByRefEnumerator<TEnumerator, T> SkipByRef<TEnumerator, T>
+        public static RefStructSkipByRefEnumerator<T, TEnumerator> SkipByRef<T, TEnumerator>
         (
             this TEnumerator enumerator,
             int count,
             T? _ = default
         )
-            where TEnumerator : struct, IRefStructByRefEnumerator<TEnumerator, T>, allows ref struct
+            where TEnumerator : struct, IRefStructByRefEnumerator<T, TEnumerator>, allows ref struct
         {
             return new(enumerator, count);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RefStructTakeEnumerator<TEnumerator, T> Take<TEnumerator, T>
+        public static RefStructTakeEnumerator<T, TEnumerator> Take<T, TEnumerator>
         (
             this TEnumerator enumerator,
             int count,
             T? _ = default
         )
-            where TEnumerator : struct, IRefStructEnumerator<TEnumerator, T>, allows ref struct
+            where TEnumerator : struct, IRefStructEnumerator<T, TEnumerator>, allows ref struct
         {
             return new(enumerator, count);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RefStructTakeByRefEnumerator<TEnumerator, T> TakeByRef<TEnumerator, T>
+        public static RefStructTakeByRefEnumerator<T, TEnumerator> TakeByRef<T, TEnumerator>
         (
             this TEnumerator enumerator,
             int count,
             T? _ = default
         )
-            where TEnumerator : struct, IRefStructByRefEnumerator<TEnumerator, T>, allows ref struct
+            where TEnumerator : struct, IRefStructByRefEnumerator<T, TEnumerator>, allows ref struct
         {
             return new(enumerator, count);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RefStructWhereByRefEnumerator<TEnumerator, T> Where<TEnumerator, T>
+        public static RefStructWhereByRefEnumerator<T, TEnumerator> Where<T, TEnumerator>
         (
             this TEnumerator enumerator,
             WhereByRefPredicate<T> predicate
         )
-            where TEnumerator : struct, IRefStructByRefEnumerator<TEnumerator, T>, allows ref struct
+            where TEnumerator : struct, IRefStructByRefEnumerator<T, TEnumerator>, allows ref struct
         {
             return new(enumerator, predicate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RefStructWhereEnumerator<TEnumerator, T> Where<TEnumerator, T>
+        public static RefStructWhereEnumerator<T, TEnumerator> Where<T, TEnumerator>
         (
             this TEnumerator enumerator,
             Func<T, bool> predicate
         )
-            where TEnumerator : struct, IRefStructEnumerator<TEnumerator, T>, allows ref struct
+            where TEnumerator : struct, IRefStructEnumerator<T, TEnumerator>, allows ref struct
         {
             return new(enumerator, predicate);
         }

@@ -3,13 +3,13 @@ using static Monkeymoto.RefStructEnumerable.RefStructEnumerable;
 
 namespace Monkeymoto.RefStructEnumerable
 {
-    public ref struct RefStructWhereByRefEnumerator<TEnumerator, T>
+    public ref struct RefStructWhereByRefEnumerator<T, TEnumerator>
     (
         TEnumerator enumerator,
         WhereByRefPredicate<T> predicate
     ) :
-        IRefStructByRefEnumerator<RefStructWhereByRefEnumerator<TEnumerator, T>, T>
-        where TEnumerator : struct, IRefStructByRefEnumerator<TEnumerator, T>, allows ref struct
+        IRefStructByRefEnumerator<T, RefStructWhereByRefEnumerator<T, TEnumerator>>
+        where TEnumerator : struct, IRefStructByRefEnumerator<T, TEnumerator>, allows ref struct
     {
         private TEnumerator enumerator = enumerator;
         private readonly WhereByRefPredicate<T> predicate = predicate;
@@ -20,14 +20,14 @@ namespace Monkeymoto.RefStructEnumerable
             get => ref enumerator.Current;
         }
 
-        T IRefStructEnumerator<RefStructWhereByRefEnumerator<TEnumerator, T>, T>.Current
+        T IRefStructEnumerator<T, RefStructWhereByRefEnumerator<T, TEnumerator>>.Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => Current;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public RefStructWhereByRefEnumerator<TEnumerator, T> GetEnumerator() => this;
+        public RefStructWhereByRefEnumerator<T, TEnumerator> GetEnumerator() => this;
 
         public bool MoveNext()
         {

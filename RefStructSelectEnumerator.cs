@@ -3,13 +3,13 @@ using System.Runtime.CompilerServices;
 
 namespace Monkeymoto.RefStructEnumerable
 {
-    public ref struct RefStructSelectEnumerator<TEnumerator, TSource, TResult>
+    public ref struct RefStructSelectEnumerator<TSource, TResult, TEnumerator>
     (
         TEnumerator enumerator,
         Func<TSource, TResult> selector
     ) :
-        IRefStructEnumerator<RefStructSelectEnumerator<TEnumerator, TSource, TResult>, TResult>
-        where TEnumerator : struct, IRefStructEnumerator<TEnumerator, TSource>, allows ref struct
+        IRefStructEnumerator<TResult, RefStructSelectEnumerator<TSource, TResult, TEnumerator>>
+        where TEnumerator : struct, IRefStructEnumerator<TSource, TEnumerator>, allows ref struct
     {
         private TEnumerator enumerator = enumerator;
         private readonly Func<TSource, TResult> selector = selector;
@@ -22,7 +22,7 @@ namespace Monkeymoto.RefStructEnumerable
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public RefStructSelectEnumerator<TEnumerator, TSource, TResult> GetEnumerator() => this;
+        public RefStructSelectEnumerator<TSource, TResult, TEnumerator> GetEnumerator() => this;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext()

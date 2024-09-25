@@ -3,13 +3,13 @@ using System.Runtime.CompilerServices;
 
 namespace Monkeymoto.RefStructEnumerable
 {
-    public ref struct RefStructSkipEnumerator<TEnumerator, T>
+    public ref struct RefStructSkipEnumerator<T, TEnumerator>
     (
         TEnumerator enumerator,
         int count
     ) :
-        IRefStructEnumerator<RefStructSkipEnumerator<TEnumerator, T>, T>
-        where TEnumerator : struct, IRefStructEnumerator<TEnumerator, T>, allows ref struct
+        IRefStructEnumerator<T, RefStructSkipEnumerator<T, TEnumerator>>
+        where TEnumerator : struct, IRefStructEnumerator<T, TEnumerator>, allows ref struct
     {
         private TEnumerator enumerator = enumerator;
         private int count = Math.Max(count, 0);
@@ -21,7 +21,7 @@ namespace Monkeymoto.RefStructEnumerable
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public RefStructSkipEnumerator<TEnumerator, T> GetEnumerator() => this;
+        public RefStructSkipEnumerator<T, TEnumerator> GetEnumerator() => this;
 
         public bool MoveNext()
         {

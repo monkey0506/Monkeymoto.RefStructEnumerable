@@ -2,8 +2,8 @@
 
 namespace Monkeymoto.RefStructEnumerable
 {
-    public interface IRefStructEnumerable<TEnumerator, T>
-        where TEnumerator : struct, IRefStructEnumerator<TEnumerator, T>, allows ref struct
+    public interface IRefStructEnumerable<T, TEnumerator>
+        where TEnumerator : struct, IRefStructEnumerator<T, TEnumerator>, allows ref struct
     {
         [UnscopedRef]
         public TEnumerator GetEnumerator();
